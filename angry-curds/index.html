@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angry Curds - Cheese Physics Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1>🧀 ANGRY CURDS 🧀</h1>
+            <div class="stats">
+                <div class="score">Score: <span id="score">0</span></div>
+                <div class="curds-left">Curds Left: <span id="curds-left">3</span></div>
+                <div class="level">Level: <span id="level">1</span></div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <p>🎯 Drag and release the cheese curd to launch it! Destroy all the mice to win!</p>
+        </div>
+
+        <canvas id="gameCanvas"></canvas>
+
+        <div class="controls">
+            <button id="restart-btn" class="btn">🔄 Restart Level</button>
+            <button id="next-level-btn" class="btn" style="display: none;">➡️ Next Level</button>
+        </div>
+
+        <div id="game-over-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h2 id="game-over-title">Level Complete!</h2>
+                <p id="game-over-message">You destroyed all the mice!</p>
+                <p>Final Score: <span id="final-score">0</span></p>
+                <button id="play-again-btn" class="btn">Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
