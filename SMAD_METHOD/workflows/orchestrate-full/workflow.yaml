@@ -1,0 +1,181 @@
+name: orchestrate-full
+description: Automated BMAD workflow orchestrator from ideation to implementation
+author: SMAD
+version: 1.0.0
+
+# Configuration
+config_source: "{project-root}/bmad/bmm/config.yaml"
+project_name: "{config_source}:project_name"
+output_folder: "{config_source}:output_folder"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+
+# Additional Config Sources
+cis_config: "{project-root}/bmad/cis/config.yaml"
+
+# Installed Path
+installed_path: "{project-root}/SMAD_METHOD/workflows/orchestrate-full"
+
+# Instructions
+instructions: "{installed_path}/instructions.md"
+
+# No template - this is an orchestration workflow
+template: false
+
+# Workflow Components
+components:
+  # CIS Workflows
+  core_brainstorming: "{project-root}/bmad/core/workflows/brainstorming/workflow.yaml"
+  problem_solving: "{project-root}/bmad/cis/workflows/problem-solving/workflow.yaml"
+  innovation_strategy: "{project-root}/bmad/cis/workflows/innovation-strategy/workflow.yaml"
+
+  # BMM Analysis Workflows
+  brainstorm_project: "{project-root}/bmad/bmm/workflows/1-analysis/brainstorm-project/workflow.yaml"
+  research: "{project-root}/bmad/bmm/workflows/1-analysis/research/workflow.yaml"
+  product_brief: "{project-root}/bmad/bmm/workflows/1-analysis/product-brief/workflow.yaml"
+  domain_research: "{project-root}/bmad/bmm/workflows/1-analysis/domain-research/workflow.yaml"
+
+  # BMM Planning Workflows
+  workflow_init: "{project-root}/bmad/bmm/workflows/workflow-status/init/workflow.yaml"
+  prd: "{project-root}/bmad/bmm/workflows/2-plan-workflows/prd/workflow.yaml"
+  tech_spec: "{project-root}/bmad/bmm/workflows/2-plan-workflows/tech-spec/workflow.yaml"
+
+  # BMM Solutioning Workflows
+  architecture: "{project-root}/bmad/bmm/workflows/3-solutioning/architecture/workflow.yaml"
+  solutioning_gate: "{project-root}/bmad/bmm/workflows/3-solutioning/solutioning-gate-check/workflow.yaml"
+
+  # BMM Implementation Workflows
+  sprint_planning: "{project-root}/bmad/bmm/workflows/4-implementation/sprint-planning/workflow.yaml"
+  epic_tech_context: "{project-root}/bmad/bmm/workflows/4-implementation/epic-tech-context/workflow.yaml"
+  create_story: "{project-root}/bmad/bmm/workflows/4-implementation/create-story/workflow.yaml"
+  story_context: "{project-root}/bmad/bmm/workflows/4-implementation/story-context/workflow.yaml"
+  develop_story: "{project-root}/bmad/bmm/workflows/4-implementation/dev-story/workflow.yaml"
+  code_review: "{project-root}/bmad/bmm/workflows/4-implementation/code-review/workflow.yaml"
+  story_done: "{project-root}/bmad/bmm/workflows/4-implementation/story-done/workflow.yaml"
+  epic_retrospective: "{project-root}/bmad/bmm/workflows/4-implementation/retrospective/workflow.yaml"
+
+  # Status Workflow
+  workflow_status: "{project-root}/bmad/bmm/workflows/workflow-status/workflow.yaml"
+
+# Status File
+status_file: "{output_folder}/bmm-workflow-status.yaml"
+
+# Output Files (for tracking)
+output_files:
+  orchestration_summary: "{output_folder}/orchestration-summary.md"
+  orchestration_status: "{output_folder}/orchestration-status.yaml"
+
+# Input File Patterns (for discovery)
+input_file_patterns:
+  brainstorming:
+    whole: "{output_folder}/*brainstorm*.md"
+    sharded: "{output_folder}/*brainstorm*/index.md"
+
+  research:
+    whole: "{output_folder}/*research*.md"
+    sharded: "{output_folder}/*research*/index.md"
+
+  product_brief:
+    whole: "{output_folder}/*product*brief*.md"
+    whole_alt: "{output_folder}/*brief*.md"
+
+  prd:
+    whole: "{output_folder}/*prd*.md"
+    whole_alt: "{output_folder}/*PRD*.md"
+    sharded: "{output_folder}/*prd*/index.md"
+
+  epics:
+    whole: "{output_folder}/*epic*.md"
+    sharded: "{output_folder}/*epic*/index.md"
+
+  architecture:
+    whole: "{output_folder}/*architecture*.md"
+    whole_alt: "{output_folder}/*arch*.md"
+    sharded: "{output_folder}/*architecture*/index.md"
+
+# Orchestration Configuration
+orchestration:
+  mode: automated  # automated | interactive
+
+  # Phase Control
+  phases:
+    ideation: true        # CIS workflows
+    analysis: true        # BMM analysis workflows
+    planning: true        # PRD/Epics
+    solutioning: true     # Architecture
+    implementation: true  # Sprint execution
+
+  # Workflow Selection
+  ideation_workflows:
+    brainstorming: required    # CIS brainstorming
+    problem_solving: optional  # If complex problem
+    innovation: optional       # If strategic opportunity
+
+  analysis_workflows:
+    research: recommended      # Market/technical research
+    product_brief: required    # Product vision
+    domain_research: optional  # If regulated/complex domain
+
+  planning_track: auto  # auto | quick-flow | bmad-method | enterprise
+
+  # Implementation Control
+  implementation:
+    auto_story_context: true    # Generate story context automatically
+    auto_code_review: true      # Run code review automatically
+    auto_retrospective: false   # Retrospectives need participation
+
+  # Quality Gates
+  quality_gates:
+    validate_outputs: true
+    check_completeness: true
+    run_checklists: true
+    require_approvals: false  # Set to true for interactive mode
+
+# Variables for Context Injection
+context_variables:
+  date: system-generated
+  orchestrator_version: "1.0.0"
+  orchestration_start_time: system-generated
+
+# Standalone Configuration
+standalone: true
+
+# Web Bundle Configuration
+web_bundle:
+  name: "bmad-orchestrator"
+  description: "Complete BMAD workflow orchestration from ideation to implementation"
+  instructions: "SMAD_METHOD/workflows/orchestrate-full/instructions.md"
+  web_bundle_files:
+    - "SMAD_METHOD/workflows/orchestrate-full/instructions.md"
+    - "SMAD_METHOD/workflows/orchestrate-full/workflow.yaml"
+    - "SMAD_METHOD/agents/orchestrator.agent.yaml"
+
+# Dependencies
+dependencies:
+  required_modules:
+    - bmad-core
+    - bmad-cis
+    - bmad-bmm
+
+  required_configs:
+    - bmad/bmm/config.yaml
+    - bmad/cis/config.yaml
+
+  required_tasks:
+    - bmad/core/tasks/workflow.xml
+
+# Metadata
+metadata:
+  category: orchestration
+  complexity: advanced
+  time_estimate: "2-8 hours (depending on project scope)"
+  prerequisites:
+    - "Project requirements defined"
+    - "BMAD modules installed"
+    - "Output folder configured"
+
+  outputs:
+    - "Complete project implementation"
+    - "All BMAD workflow artifacts"
+    - "Orchestration summary report"
+    - "Lessons learned and retrospectives"
